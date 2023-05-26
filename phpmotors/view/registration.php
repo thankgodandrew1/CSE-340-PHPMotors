@@ -23,13 +23,13 @@
         </nav>
         <main class="register-main">
             <h1>Register</h1>
-            <?php
-            if (isset($message)) {
-                echo $message;
-            }
-            ?>
             <form method="post" action="/phpmotors/accounts/index.php" class="register">
                 <p>* All fields are required</p>
+                <?php
+                if (isset($message)) {
+                    echo $message;
+                }
+                ?>
                 <label for="clientFirstname">First name*</label>
                 <input type="text" id="clientFirstname" name="clientFirstname">
 

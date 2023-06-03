@@ -1,3 +1,25 @@
+<?php
+// Build a dynamic dropdown for car classification
+$classificationList = '<select class="selectClass" name="classificationId">';
+$classificationList .= "<option value='' selected>Choose Car Classification</option>";
+
+foreach ($classifications as $classification) {
+    $classificationId = $classification['classificationId'];
+    $classificationName = $classification['classificationName'];
+
+    $selected = '';
+
+    if (isset($_POST['classificationId']) && $classificationId == $_POST['classificationId']) {
+        $selected = 'selected';
+    }
+
+    $classificationList .= '<option value="' . $classificationId . '" ' . $selected . '>' . $classificationName . '</option>';
+}
+
+$classificationList .= '</select>';
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,11 +50,6 @@
                 echo $message;
             }
             ?>
-            <?php if (isset($errorMsg)) { ?>
-                <div class="error-message">
-                    <?php echo $errorMsg; ?>
-                </div>
-            <?php } ?>
             <form action="/phpmotors/vehicles/index.php" method="post" class="register" id="vehicle-form">
                 <p>*All Fields are Required</p>
                 <label>
@@ -41,38 +58,54 @@
 
                 <div class="form-flex">
                     <label>Make*
-                        <input type="text" name="invMake">
+                        <input type="text" name="invMake" <?php if (isset($invMake)) {
+                                                                echo "value='$invMake'";
+                                                            } ?> required>
                     </label>
 
                     <label>Model*
-                        <input type="text" name="invModel">
+                        <input type="text" name="invModel" <?php if (isset($invModel)) {
+                                                                echo "value='$invModel'";
+                                                            } ?> required>
                     </label>
                 </div>
 
                 <label>Description*
-                    <textarea name="invDescription" cols="100" rows="4" class="desc"></textarea>
+                    <textarea name="invDescription" cols="100" rows="4" class="desc" required><?php if (isset($invDescription)) {
+                                                                                                    echo "$invDescription";
+                                                                                                }  ?></textarea>
                 </label>
                 <div class="form-flex">
                     <label>Image Path*
-                        <input type="text" name="invImage" value="/phpmotors/images/no-image.png">
+                        <input type="text" name="invImage" value="/phpmotors/images/no-image.png" <?php if (isset($invImage)) {
+                                                                                                        echo "value='$invImage'";
+                                                                                                    } ?> required>
                     </label>
 
                     <label>Thumbnail Path*
-                        <input type="text" name="invThumbnail" value="/phpmotors/images/no-image.png">
+                        <input type="text" name="invThumbnail" value="/phpmotors/images/no-image.png" <?php if (isset($invThumbnail)) {
+                                                                                                            echo "value='$invThumbnail'";
+                                                                                                        } ?> required>
                     </label>
                 </div>
 
                 <div class="form-flex">
                     <label>Price*
-                        <input type="number" name="invPrice">
+                        <input type="number" name="invPrice" <?php if (isset($invPrice)) {
+                                                                    echo "value='$invPrice'";
+                                                                } ?> required>
                     </label>
 
                     <label>Stock*
-                        <input type="number" name="invStock">
+                        <input type="number" name="invStock" <?php if (isset($invStock)) {
+                                                                    echo "value='$invStock'";
+                                                                } ?> required>
                     </label>
 
                     <label>Color*
-                        <input type="text" name="invColor" id="invColor">
+                        <input type="text" name="invColor" id="invColor" <?php if (isset($invColor)) {
+                                                                                echo "value='$invColor'";
+                                                                            } ?> required>
                     </label>
                 </div>
                 <button type="submit">Add Vehicle</button>

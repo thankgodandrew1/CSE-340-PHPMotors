@@ -23,13 +23,15 @@
         </nav>
         <main class="register-main">
             <h2>Add Classification!</h2>
-            <form action="/phpmotors/vehicles/index.php" method="post" class="login register">
+            <form method="post" action="/phpmotors/vehicles/index.php" class="login register">
                 <label for="classificationName"><b>Classification Name:</b></label>
-                <input type="text" name="classificationName" id="classificationName" placeholder="SUV">
-                <?php if (!empty($errorMsg)) : ?>
-                    <p class="error-message"><?php echo $errorMsg; ?></p>
-                <?php endif; ?>
-
+                <span>Maximum 30 characters</span>
+                <input type="text" name="classificationName" id="classificationName" pattern=".{1,30}" title="Maximum 30 characters" placeholder="SUV" required>
+                <?php
+                if (isset($message)) {
+                    echo $message;
+                }
+                ?>
                 <button type="submit">Add Classification</button>
                 <input type="hidden" name="action" value="addClassification">
             </form>

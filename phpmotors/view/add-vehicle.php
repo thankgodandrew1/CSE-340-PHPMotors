@@ -1,4 +1,9 @@
 <?php
+if (!$_SESSION['loggedin'] || $_SESSION['clientData']['clientLevel'] <= 1) {
+    header('Location: /phpmotors/index.php/');
+}
+?>
+<?php
 // Build a dynamic dropdown for car classification
 $classificationList = '<select class="selectClass" name="classificationId">';
 $classificationList .= "<option value='' selected>Choose Car Classification</option>";

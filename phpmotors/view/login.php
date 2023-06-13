@@ -24,11 +24,11 @@
         <main class="register-main">
             <h1>Sign in</h1>
             <?php
-            if (isset($message)) {
-                echo $message;
+            if (isset($_SESSION['message'])) {
+                echo $_SESSION['message'];
             }
             ?>
-            <form action="/phpmotors/accounts/index.php" method="POST" class="register login">
+            <form action="/phpmotors/accounts/" method="POST" class="register login">
                 <label for="clientEmail">Email:</label>
                 <input type="email" id="clientEmail" name="clientEmail" <?php if (isset($clientEmail)) {
                                                                             echo "value='$clientEmail'";

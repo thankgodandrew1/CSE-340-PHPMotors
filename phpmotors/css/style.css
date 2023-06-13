@@ -38,8 +38,11 @@ body {
   display: flex;
   justify-content: space-between;
 }
+/* #header span {
+  padding: 15px;
+  margin-left: -6em;
+} */
 #header a {
-  padding: 17px 30px;
   color: var(--accent3-color);
   font-weight: bold;
 }
@@ -48,6 +51,9 @@ body {
 }
 #header img {
   cursor: pointer;
+}
+#header div {
+  padding: 17px 30px;
 }
 nav ul {
   display: flex;
@@ -229,6 +235,24 @@ input:focus:invalid {
 }
 input:required:valid {
   border: 2px solid green;
+}
+.admin-ul {
+  padding: 0 20px;
+  margin-left: 28px;
+  margin-bottom: 10px;
+}
+.admin-ul li {
+  list-style: disc;
+}
+.logged-in {
+  margin-left: 10px;
+  padding: 7px;
+}
+.client-inv {
+  margin: 10px;
+}
+.client-inv-link:hover {
+  text-decoration: underline;
 }
 @media only screen and (min-width: 50em) {
   .vehicle-man li {

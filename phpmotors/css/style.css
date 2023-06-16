@@ -254,6 +254,13 @@ input:required:valid {
 .client-inv-link:hover {
   text-decoration: underline;
 }
+.err-msg,
+.msg {
+  font-weight: bold;
+  font-family: cursive;
+  color: red;
+  padding-left: 12px;
+}
 @media only screen and (min-width: 50em) {
   .vehicle-man li {
     text-align: left;

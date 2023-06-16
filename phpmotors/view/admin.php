@@ -27,19 +27,34 @@ if (!isset($_SESSION['loggedin'])) {
             <?php echo $navList; ?>
         </nav>
         <main>
+            <?php
+            if (isset($message)) {
+                echo $message;
+            }
+            ?>
             <h1>
                 <?php
                 // var_dump($_SESSION['clientData']);
                 echo $_SESSION['clientData']['clientFirstname'] . ' ' . $_SESSION['clientData']['clientLastname'];
+
                 ?>
             </h1>
+            <?php
+            if (isset($_SESSION['message'])) {
+                echo $_SESSION['message'];
+            }
+            ?>
             <p class="logged-in">You are logged in.</p>
             <ul class="admin-ul">
                 <li>First Name: <?php echo $_SESSION['clientData']['clientFirstname']; ?></li>
                 <li>Last Name: <?php echo $_SESSION['clientData']['clientLastname']; ?></li>
                 <li>Email: <?php echo $_SESSION['clientData']['clientEmail']; ?></li>
-                <li>Level: <?php echo $_SESSION['clientData']['clientLevel']; ?></li>
             </ul>
+            <h2 class='client-inv'>Account Management</h2>
+            <p class='client-inv'>Use this link to update client information.</p>
+            <?php
+            echo "<a href='/phpmotors/accounts?action=updateAccountView' class='client-inv client-inv-link'>Update Account Information</a>"
+            ?>
             <?php
             if (intval($_SESSION['clientData']['clientLevel']) > 1) {
                 echo "<h2 class='client-inv'>Inventory Management</h2>";
@@ -47,6 +62,7 @@ if (!isset($_SESSION['loggedin'])) {
                 echo "<a href = '/phpmotors/vehicles/' class='client-inv client-inv-link'>Vehicle Management</a>";
             }
             ?>
+
         </main>
         <hr>
         <footer>
@@ -56,3 +72,4 @@ if (!isset($_SESSION['loggedin'])) {
 </body>
 
 </html>
+<?php unset($_SESSION['message']); ?>

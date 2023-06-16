@@ -47,7 +47,7 @@ switch ($action) {
         $existingEmail = checkExistingEmail($clientEmail);
 
         if ($existingEmail) {
-            $message = '<p class="notice">That email address already exists. Do you want to login instead?</p>';
+            $message = '<p class="msg">That email address already exists. Do you want to login instead?</p>';
             include '../view/login.php';
             exit;
         }
@@ -124,6 +124,95 @@ switch ($action) {
     case 'Logout':
         session_destroy();
         header('Location: /phpmotors/accounts/?action=login');
+        break;
+    case 'updateAccountView':
+        include '../view/client-update.php';
+        break;
+    case 'updateAccount':
+        $clientId = $_SESSION['clientData']['clientId'];
+        $clientFirstname = trim(filter_input(INPUT_POST, 'clientFirstname', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $clientLastname = trim(filter_input(INPUT_POST, 'clientLastname', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $clientEmail = trim(filter_input(INPUT_POST, 'clientEmail', FILTER_SANITIZE_EMAIL));
+        // $clientPassword = trim(filter_input(INPUT_POST, 'clientPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        // Checks if the new email address is different from the one in the session
+        if ($clientEmail !== $_SESSION['clientData']['clientEmail']) {
+            $existingEmail = checkExistingEmail($clientEmail);
+            if ($existingEmail) {
+                $message = '<p class="msg">That email address already exists. Please choose a different email.</p>';
+                include '../view/client-update.php';
+                exit;
+            }
+        }
+
+        // Validate Email
+        $clientEmail = checkEmail($clientEmail);
+
+        // Validate other form fields
+        if (empty($clientFirstname) || empty($clientLastname) || empty($clientEmail)) {
+            $message = '<p>Please provide information for all required fields.</p>';
+            include '../view/client-update.php';
+            exit;
+        }
+
+        $updateInfo = updatePersonalInfo($clientFirstname, $clientLastname, $clientEmail, $clientId);
+        // Retrieve the client data from the database based on the clientId
+        $clientData = getClientById($clientId);
+        // array_pop($clientData);
+
+        // Update the client data into the session
+        $_SESSION['clientData'] = $clientData;
+
+        // Check and report the result
+        if ($updateInfo === 1) {
+            $message = "<p class='msg'>Information update was successful.</p>";
+            $_SESSION['message'] = $message;
+            header('location: /phpmotors/accounts/');
+            exit;
+        } else {
+            $message = "<p class='err-msg'>Failed to update information. Please try again.</p>";
+            $_SESSION['message'] = $message;
+            header('location: /phpmotors/accounts/');
+            exit;
+        }
+        break;
+    case 'updatePassword':
+        $clientId = $_SESSION['clientData']['clientId'];
+        $clientPassword = trim(filter_input(INPUT_POST, 'clientPassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        $checkPassword = checkPassword($clientPassword);
+
+
+        if (empty($checkPassword)) {
+            $message = '<p class="msg">Please provide information for the password field.</p>';
+            include '../view/client-update.php';
+            exit;
+        }
+
+        // Hash the checked password
+        $hashedPassword = password_hash($clientPassword, PASSWORD_DEFAULT);
+
+        $newPassword = updateClientPassword($hashedPassword, $clientId);
+
+        // $clientData = getClientById($clientId);
+        // array_pop($clientData);
+
+        // Update the client data into the session
+        // $_SESSION['clientData'] = $clientData;
+
+        // Check and report the result in admin.php view
+        if ($newPassword == 1) {
+            setcookie('firstname', $clientFirstname, strtotime('+1 year'), '/');
+            $message = "<p class='msg'>You've successfully updated your password.</p>";
+            $_SESSION['message'] = $message;
+            header('Location: /phpmotors/accounts/');
+            exit;
+        } else {
+            $message = "<p class='err-msg'>Failed to update password. Please try again.</p>";
+            $_SESSION['message'] = $message;
+            header('Location: /phpmotors/accounts/');
+            exit;
+        }
         break;
     default:
         include '../view/admin.php';

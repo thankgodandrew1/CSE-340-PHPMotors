@@ -6,6 +6,11 @@
   box-sizing: border-box;
   text-decoration: none;
 }
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 :root {
   --primary-color: #bababa;
   --secondary-color: #8d8d8d;
@@ -261,6 +266,50 @@ input:required:valid {
   color: red;
   padding-left: 12px;
 }
+#inv-display {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#inv-display li {
+  margin: 10px;
+  margin-bottom: 0.5em;
+  border: 1px #ccc solid;
+  list-style-type: none;
+  flex: 1 1 auto;
+  border-radius: 20px;
+}
+
+#inv-display li img {
+  max-width: 100%;
+}
+.car-image {
+  width: 90%;
+  display: block;
+  margin: 10px auto;
+}
+.car-img-price {
+  padding: 15px;
+  margin-bottom: 24px;
+  font-family: cursive;
+  margin-left: 17px;
+}
+.car-details {
+  margin-left: 10px;
+  font-family: cursive;
+  margin-bottom: 24px;
+}
+.car-padding {
+  padding: 13px;
+}
+.car-bg {
+  background-color: var(--accent1-color);
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 8px;
+}
 @media only screen and (min-width: 50em) {
   .vehicle-man li {
     text-align: left;
@@ -345,5 +394,35 @@ input:required:valid {
   #deloreon-info h2 {
     margin-bottom: 1em;
     margin-top: 2em;
+  }
+  /* For vehicle display in classification view */
+  #inv-display {
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
+
+  #inv-display h2 {
+    font-size: 1rem;
+  }
+
+  #inv-display li {
+    max-width: 200px;
+    flex: 1 0 auto;
+    text-align: center;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  #inv-display div {
+    width: 100%;
+  }
+  .car-info {
+    display: flex;
+    font-weight: bold;
+  }
+  .car-image {
+    width: 95%;
   }
 }

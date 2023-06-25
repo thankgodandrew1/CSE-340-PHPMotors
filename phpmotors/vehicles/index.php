@@ -156,25 +156,50 @@ switch ($action) {
         }
         include '../view/vehicle-delete.php';
         break;
-        case 'deleteVehicle':
-            $invMake = filter_input(INPUT_POST, 'invMake', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $invModel = filter_input(INPUT_POST, 'invModel', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $invId = filter_input(INPUT_POST, 'invId', FILTER_SANITIZE_NUMBER_INT);
-            
-            $deleteResult = deleteVehicle($invId);
-            if ($deleteResult) {
-                $message = "<p class='msg'>Congratulations the, $invMake $invModel was	successfully deleted.</p>";
-                $_SESSION['message'] = $message;
-                header('location: /phpmotors/vehicles/');
-                exit;
-            } else {
-                $message = "<p class='err-msg'>Error: $invMake $invModel was not
+    case 'deleteVehicle':
+        $invMake = filter_input(INPUT_POST, 'invMake', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $invModel = filter_input(INPUT_POST, 'invModel', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $invId = filter_input(INPUT_POST, 'invId', FILTER_SANITIZE_NUMBER_INT);
+
+        $deleteResult = deleteVehicle($invId);
+        if ($deleteResult) {
+            $message = "<p class='msg'>Congratulations the, $invMake $invModel was	successfully deleted.</p>";
+            $_SESSION['message'] = $message;
+            header('location: /phpmotors/vehicles/');
+            exit;
+        } else {
+            $message = "<p class='err-msg'>Error: $invMake $invModel was not
             deleted.</p>";
-                $_SESSION['message'] = $message;
-                header('location: /phpmotors/vehicles/');
-                exit;
-            }
-            break;
+            $_SESSION['message'] = $message;
+            header('location: /phpmotors/vehicles/');
+            exit;
+        }
+        break;
+    case 'classification':
+        $classificationName = filter_input(INPUT_GET, 'classificationName', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $vehicles = getVehiclesByClassification($classificationName);
+        if (!count($vehicles)) {
+            $message = "<p class='notice'>Sorry, no $classificationName could be found.</p>";
+        } else {
+            $vehicleDisplay = buildVehiclesDisplay($vehicles);
+        }
+        // echo $vehicleDisplay;
+        // exit;
+        include '../view/classification.php';
+        break;
+        // ...
+
+    case 'vehicleInfo':
+        $vehicleId = filter_input(INPUT_GET, 'vehicle', FILTER_SANITIZE_NUMBER_INT);
+        $vehicleInfo = getVehicleInfo($vehicleId);
+
+        if (empty($vehicleInfo)) {
+            $message = "<p class='err-msg'>Sorry, no vehicle information could be found.</p>";
+        } else {
+            $vehiclesInfoDisplay = buildVehiclesView($vehicleInfo);
+        }
+        include '../view/vehicle-detail.php';
+        break;
 
     default:
         $classificationList = buildClassificationList($classifications);

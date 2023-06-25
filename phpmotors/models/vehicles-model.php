@@ -94,7 +94,7 @@ function updateVehicle($invMake, $invModel, $invDescription, $invImage, $invThum
     // Create a connection object using the phpmotors connection function
     $db = phpmotorsConnect();
     // The SQL statement
-    $sql = 'UPDATE inventory SET invMake = :invMake, invModel = :invModel, invDescription = :invDescription, invImage = :invImage, invThumbnail = :invThumbnail, invPrice = :invPrice, invStock = :invStock, invColor = :invColor, classificationId = :classificationId WHERE invId = :invId';   
+    $sql = 'UPDATE inventory SET invMake = :invMake, invModel = :invModel, invDescription = :invDescription, invImage = :invImage, invThumbnail = :invThumbnail, invPrice = :invPrice, invStock = :invStock, invColor = :invColor, classificationId = :classificationId WHERE invId = :invId';
     // Create the prepared statement using the phpmotors connection
     $stmt = $db->prepare($sql);
     // The next nine lines replace the placeholders in the SQL
@@ -139,4 +139,30 @@ function deleteVehicle($invId)
     $stmt->closeCursor();
     // Return the indication of success (rows changed)
     return $rowsChanged;
+}
+
+// Gets a list of vehicles based on the classification.
+function getVehiclesByClassification($classificationName)
+{
+    $db = phpmotorsConnect();
+    $sql = 'SELECT * FROM inventory WHERE classificationId IN (SELECT classificationId FROM carclassification WHERE classificationName = :classificationName)';
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':classificationName', $classificationName, PDO::PARAM_STR);
+    $stmt->execute();
+    $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $vehicles;
+}
+
+// Get vehicles infoormation
+function getVehicleInfo($invId)
+{
+    $db = phpmotorsConnect();
+    $sql = 'SELECT * FROM inventory WHERE invId = :invId';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':invId', $invId, PDO::PARAM_INT);
+    $stmt->execute();
+    $vehicleInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $vehicleInfo;
 }

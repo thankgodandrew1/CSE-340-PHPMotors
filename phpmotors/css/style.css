@@ -207,6 +207,9 @@ form {
   background-color: #665959;
   color: var(--accent4-color);
 }
+.regbtn {
+  cursor: pointer;
+}
 .register-link {
   font-weight: bold;
   font-size: 20px;
@@ -285,30 +288,84 @@ input:required:valid {
 #inv-display li img {
   max-width: 100%;
 }
-.car-image {
-  width: 90%;
-  display: block;
-  margin: 10px auto;
-}
-.car-img-price {
-  padding: 15px;
-  margin-bottom: 24px;
+.vehicleDetails {
+  display: flex;
+  flex-direction: column;
   font-family: cursive;
-  margin-left: 17px;
+  font-weight: bold;
 }
-.car-details {
-  margin-left: 10px;
-  font-family: cursive;
-  margin-bottom: 24px;
+.thumbnailImg {
+  margin: 5px 10px 10px 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  order: 3;
 }
-.car-padding {
-  padding: 13px;
+.thumbnailImg img {
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
 }
-.car-bg {
-  background-color: var(--accent1-color);
+.imgDiv,
+.infoDiv {
+  padding: 0 12px 0 12px;
+}
+.imgDiv figure img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+.imgDiv figcaption {
+  font-size: larger;
+  text-decoration: none;
+  padding: 20px;
+  color: #033158;
+}
+.infoDiv p {
+  margin: 20px 0 20px 14px;
   padding: 10px;
-  margin-right: 10px;
-  border-radius: 8px;
+  border-radius: 4px;
+}
+.infoDiv {
+  max-width: 100%;
+  height: auto;
+  margin-top: 7px;
+}
+.infoDiv p:nth-child(odd) {
+  background-color: #cfddeb;
+}
+.infoDiv::after {
+  content: "Other Images";
+  font-weight: bolder;
+  font-size: larger;
+}
+.uploads {
+  background: var(--accent2-color);
+}
+.regbtn:hover {
+  background-color: #bababa;
+}
+.para {
+  padding: 8px;
+}
+#image-display {
+  padding: 25px;
+} 
+#image-display li {
+  border-radius: 10px;
+  border: 2px solid var(--accent2-color);
+  margin: 10px;
+}
+#image-display img {
+  width: 100%;
+  display: block;
+}
+#image-display a {
+  display: block;
+  padding: 20px;
+  text-align: center;
+}
+#image-display a:hover {
+  text-decoration: underline;
 }
 @media only screen and (min-width: 50em) {
   .vehicle-man li {
@@ -418,11 +475,64 @@ input:required:valid {
   #inv-display div {
     width: 100%;
   }
-  .car-info {
+  .vehicleDetails {
     display: flex;
-    font-weight: bold;
+    flex-direction: row;
+    font-family: cursive;
   }
-  .car-image {
-    width: 95%;
+  .thumbnailImg {
+    display: flex;
+    flex-direction: column;
+    order: 1;
   }
+  .thumbnailImg::before {
+    content: "";
+  }
+  .thumbnailImg img {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+  }
+  .thumbnailImg li {
+    transition: 0.4s;
+  }
+  .imgDiv {
+    order: 2;
+    margin-bottom: -30px;
+  }
+  .imgDiv figure img {
+    margin-bottom: -200px;
+  }
+  .infoDiv {
+    order: 3;
+  }
+  .infoDiv::after {
+    content: "";
+  }
+  .thumbnailImg li:hover {
+    overflow: visible;
+    transform: scale(2);
+    z-index: 2;
+  }
+  .regbtn {
+    width: fit-content;
+  }
+  #image-display {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+#image-display li {
+    /* width: 50%; */
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+#image-display img {
+    max-width: 100%;
+    height: auto;
+}
 }

@@ -29,7 +29,7 @@
                     <p>3 Cup holders <br> Superman doors <br> Fuzzy dice!</p>
                 </div>
                 <div class="hero-image">
-                    <img src="/phpmotors/images/delorean.jpg" id="delorean" alt="DMC Delorean">
+                    <img src="/phpmotors/images/vehicles/delorean.jpg" id="delorean" alt="DMC Delorean">
                     <img src="/phpmotors/images/site/own_today.png" id="img-btn" alt="button to buy car">
                 </div>
             </div>

@@ -13,6 +13,9 @@ require_once '../models/main-model.php';
 // Get the vehicles model
 require_once '../models/vehicles-model.php';
 
+// Get the vehicles model
+require_once '../models/uploads-model.php';
+
 // Get the functions library 
 require_once '../library/functions.php';
 
@@ -187,16 +190,19 @@ switch ($action) {
         // exit;
         include '../view/classification.php';
         break;
-        // ...
 
     case 'vehicleInfo':
         $vehicleId = filter_input(INPUT_GET, 'vehicle', FILTER_SANITIZE_NUMBER_INT);
         $vehicleInfo = getVehicleInfo($vehicleId);
 
+        // Get the vehicle thumbnails
+        $thumbnailImages = getThumbnailImages($vehicleId);
+        //  $thumbnailList = generateThumbnailHTML($thumbnailImages);
+
         if (empty($vehicleInfo)) {
             $message = "<p class='err-msg'>Sorry, no vehicle information could be found.</p>";
         } else {
-            $vehiclesInfoDisplay = buildVehiclesView($vehicleInfo);
+            $vehiclesInfoDisplay = displayVehicleInfo($vehicleInfo, $thumbnailImages);
         }
         include '../view/vehicle-detail.php';
         break;

@@ -70,6 +70,7 @@ nav ul li {
 }
 nav ul li a {
   color: var(--accent4-color);
+  font-size: 12px;
 }
 nav a:hover {
   background-color: var(--accent2-color);
@@ -184,7 +185,8 @@ form {
   font-size: 1.2rem;
 }
 
-.register input {
+.register input,
+.search input {
   padding: 0.5rem;
   font-size: 1.2rem;
   border: 1px solid #ccc;
@@ -192,7 +194,8 @@ form {
   outline: none;
 }
 
-.register button[type="submit"] {
+.register button[type="submit"],
+button {
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
   border: none;
@@ -206,6 +209,18 @@ form {
 .register button[type="submit"]:hover {
   background-color: #665959;
   color: var(--accent4-color);
+}
+.search-label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  font-family: cursive;
+}
+.search-label label {
+  margin-bottom: 5px;
+}
+.search button {
+  margin-left: 26px;
 }
 .regbtn {
   cursor: pointer;
@@ -333,11 +348,11 @@ input:required:valid {
 .infoDiv p:nth-child(odd) {
   background-color: #cfddeb;
 }
-.infoDiv::after {
+/* .infoDiv::after {
   content: "Other Images";
   font-weight: bolder;
   font-size: larger;
-}
+} */
 .uploads {
   background: var(--accent2-color);
 }
@@ -349,7 +364,7 @@ input:required:valid {
 }
 #image-display {
   padding: 25px;
-} 
+}
 #image-display li {
   border-radius: 10px;
   border: 2px solid var(--accent2-color);
@@ -366,6 +381,53 @@ input:required:valid {
 }
 #image-display a:hover {
   text-decoration: underline;
+}
+#results {
+  padding: 10px;
+  font-family: cursive;
+}
+#results p a {
+  text-decoration: underline;
+  margin: 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
+#results .description {
+  margin: 10px; 
+  font-size: 17px;
+}
+#search-number {
+  margin-bottom: 8px;
+}
+.paginationBar {
+  display: flex;
+  padding: 8px;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 17px;
+}
+.page-link {
+  margin: 5px;
+  color: black;
+}
+.page-link:hover{
+  background-color: var(--accent2-color);
+}
+.page-num-link {
+  color: #fff;
+  background-color: var(--accent3-color);
+  padding: 4px;
+  padding-right: 6px;
+  padding-left: 6px;
+  border-radius: 4px;
+}
+.page-num {
+  /* margin: 5px; */
+  border-radius: 4px;
+}
+.currentPage {
+  background-color: #6f8ba3;
+  color: black;
 }
 @media only screen and (min-width: 50em) {
   .vehicle-man li {
@@ -499,10 +561,19 @@ input:required:valid {
   .imgDiv {
     order: 2;
     margin-bottom: -30px;
+    margin: 30px;
   }
   .imgDiv figure img {
     margin-bottom: -200px;
+    margin: 20px;
+    width: 600px;
+    height: auto;
+
   }
+  .veh-img {
+    width: 600px;
+  }
+
   .infoDiv {
     order: 3;
   }
@@ -523,16 +594,29 @@ input:required:valid {
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-}
+  }
 
-#image-display li {
+  #image-display li {
     /* width: 50%; */
     box-sizing: border-box;
     padding: 10px;
-}
+  }
 
-#image-display img {
+  #image-display img {
     max-width: 100%;
     height: auto;
-}
+  }
+  .search button {
+    margin-left: 26px;
+  }
+  .search-label {
+    margin: 26px;
+  }
+  #results {
+    padding: 25px;
+  }
+  nav ul li a {
+    font-size: 16px;
+  }
+  
 }

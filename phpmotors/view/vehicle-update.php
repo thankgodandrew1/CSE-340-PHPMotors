@@ -124,14 +124,6 @@ $classificationList .= '</select>';
                                                                 } ?> required>
                     </label>
 
-                    <label>Stock*
-                        <input type="number" name="invStock" <?php if (isset($invStock)) {
-                                                                    echo "value='$invStock'";
-                                                                } elseif (isset($invInfo['invStock'])) {
-                                                                    echo "value='$invInfo[invStock]'";
-                                                                } ?> required>
-                    </label>
-
                     <label>Color*
                         <input type="text" name="invColor" id="invColor" <?php if (isset($invColor)) {
                                                                                 echo "value='$invColor'";

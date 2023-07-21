@@ -62,24 +62,23 @@ switch ($action) {
     case 'addVehicle':
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Retrieve the names from the form
-            $classificationId = trim(filter_input(INPUT_POST, 'classificationId', FILTER_SANITIZE_NUMBER_INT));
+            $classificationId = trim(filter_input(INPUT_POST, 'classificationId', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invMake = trim(filter_input(INPUT_POST, 'invMake', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invModel = trim(filter_input(INPUT_POST, 'invModel', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invDescription = trim(filter_input(INPUT_POST, 'invDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invImage = trim(filter_input(INPUT_POST, 'invImage', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invThumbnail = trim(filter_input(INPUT_POST, 'invThumbnail', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invPrice = trim(filter_input(INPUT_POST, 'invPrice', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
-            $invStock = trim(filter_input(INPUT_POST, 'invStock', FILTER_SANITIZE_NUMBER_INT));
             $invColor = trim(filter_input(INPUT_POST, 'invColor', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
             // Perform data validation and error handling
 
-            if (empty($invMake) || empty($invModel) || empty($invDescription) || empty($invImage) || empty($invThumbnail) || empty($invPrice) || empty($invStock) || empty($invColor) || empty($classificationId)) {
+            if (empty($invMake) || empty($invModel) || empty($invDescription) || empty($invImage) || empty($invThumbnail) || empty($invPrice) || empty($invColor) || empty($classificationId)) {
                 $message = '<p>Please fill in all the fields.</p>';
             } else {
                 // Code to insert the new vehicle into the database
                 // Call the newCarClassification() function from the vehicles model
-                $addNewVehicle = newVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invStock, $invColor, $classificationId);
+                $addNewVehicle = newVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invColor, $classificationId);
 
                 // Check if the insertion was successful
                 if ($addNewVehicle === 1) {
@@ -98,14 +97,14 @@ switch ($action) {
     * ********************************** */
     case 'getInventoryItems':
         // Get the classificationId 
-        $classificationId = filter_input(INPUT_GET, 'classificationId', FILTER_SANITIZE_NUMBER_INT);
+        $classificationId = filter_input(INPUT_GET, 'classificationId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         // Fetch the vehicles by classificationId from the DB 
         $inventoryArray = getInventoryByClassification($classificationId);
         // Convert the array to a JSON object and send it back 
         echo json_encode($inventoryArray);
         break;
     case 'mod':
-        $invId = filter_input(INPUT_GET, 'invId', FILTER_VALIDATE_INT);
+        $invId = filter_input(INPUT_GET, 'invId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $invInfo = getInvItemInfo($invId);
         if (count($invInfo) < 1) {
             $message = 'Sorry, no vehicle information could be found.';
@@ -115,25 +114,24 @@ switch ($action) {
     case 'updateVehicle':
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Retrieve the names from the form
-            $classificationId = trim(filter_input(INPUT_POST, 'classificationId', FILTER_SANITIZE_NUMBER_INT));
+            $classificationId = trim(filter_input(INPUT_POST, 'classificationId', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invMake = trim(filter_input(INPUT_POST, 'invMake', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invModel = trim(filter_input(INPUT_POST, 'invModel', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invDescription = trim(filter_input(INPUT_POST, 'invDescription', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invImage = trim(filter_input(INPUT_POST, 'invImage', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invThumbnail = trim(filter_input(INPUT_POST, 'invThumbnail', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             $invPrice = trim(filter_input(INPUT_POST, 'invPrice', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
-            $invStock = trim(filter_input(INPUT_POST, 'invStock', FILTER_SANITIZE_NUMBER_INT));
             $invColor = trim(filter_input(INPUT_POST, 'invColor', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-            $invId = filter_input(INPUT_POST, 'invId', FILTER_SANITIZE_NUMBER_INT);
+            $invId = filter_input(INPUT_POST, 'invId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             // Perform data validation and error handling
 
-            if (empty($invMake) || empty($invModel) || empty($invDescription) || empty($invImage) || empty($invThumbnail) || empty($invPrice) || empty($invStock) || empty($invColor) || empty($classificationId)) {
+            if (empty($invMake) || empty($invModel) || empty($invDescription) || empty($invImage) || empty($invThumbnail) || empty($invPrice) || empty($invColor) || empty($classificationId)) {
                 $message = '<p class="err-msg">Please complete all information for the updated item! Double check the classification of the item.</p>';
             } else {
                 // Code to insert the new vehicle into the database
                 // Call the newCarClassification() function from the vehicles model
-                $updateResult  = updateVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invStock, $invColor, $classificationId, $invId);
+                $updateResult  = updateVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invColor, $classificationId, $invId);
 
                 // Check if the insertion was successful
                 if ($updateResult) {
@@ -152,7 +150,7 @@ switch ($action) {
         exit;
         break;
     case 'del':
-        $invId = filter_input(INPUT_GET, 'invId', FILTER_VALIDATE_INT);
+        $invId = filter_input(INPUT_GET, 'invId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $invInfo = getInvItemInfo($invId);
         if (count($invInfo) < 1) {
             $message = 'Sorry, no vehicle information could be found.';
@@ -162,7 +160,7 @@ switch ($action) {
     case 'deleteVehicle':
         $invMake = filter_input(INPUT_POST, 'invMake', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $invModel = filter_input(INPUT_POST, 'invModel', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $invId = filter_input(INPUT_POST, 'invId', FILTER_SANITIZE_NUMBER_INT);
+        $invId = filter_input(INPUT_POST, 'invId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         $deleteResult = deleteVehicle($invId);
         if ($deleteResult) {
@@ -192,17 +190,14 @@ switch ($action) {
         break;
 
     case 'vehicleInfo':
-        $vehicleId = filter_input(INPUT_GET, 'vehicle', FILTER_SANITIZE_NUMBER_INT);
+        $vehicleId = filter_input(INPUT_GET, 'vehicleId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        // echo $vehicleId;
         $vehicleInfo = getVehicleInfo($vehicleId);
 
-        // Get the vehicle thumbnails
-        $thumbnailImages = getThumbnailImages($vehicleId);
-        //  $thumbnailList = generateThumbnailHTML($thumbnailImages);
-
-        if (empty($vehicleInfo)) {
+        if (!$vehicleInfo) {
             $message = "<p class='err-msg'>Sorry, no vehicle information could be found.</p>";
         } else {
-            $vehiclesInfoDisplay = displayVehicleInfo($vehicleInfo, $thumbnailImages);
+            $vehiclesInfoDisplay = displayVehicleInfo($vehicleInfo);
         }
         include '../view/vehicle-detail.php';
         break;

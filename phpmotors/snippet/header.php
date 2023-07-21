@@ -7,5 +7,6 @@
         } else {
             echo "<a href='/phpmotors/accounts/index.php?action=login' id='account' title='Login or Register with PHP Motors'>My Account</a>";
         } ?>
+        <a href="/phpmotors/search" title="Search PHP Motors">&#x1F50D;</a>
     </div>
 </div>

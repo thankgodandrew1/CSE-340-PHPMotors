@@ -47,8 +47,8 @@ function buildVehiclesDisplay($vehicles)
     $dv = '<ul id="inv-display">';
     foreach ($vehicles as $vehicle) {
         $dv .= '<li>';
-        $dv .= "<a href='/phpmotors/vehicles/index.php?action=vehicleInfo&vehicle=$vehicle[invId]'>";
-        $dv .= "<img src='$vehicle[invThumbnail]' alt='Image of $vehicle[invMake] $vehicle[invModel] on phpmotors.com'>";
+        $dv .= "<a href='/phpmotors/vehicles/?action=vehicleInfo&vehicleId=" . urlencode($vehicle['invId']) . "'>";
+        $dv .= "<img src='$vehicle[imgPath]' alt='Image of $vehicle[invMake] $vehicle[invModel] on phpmotors.com'>";
         $dv .= '<hr>';
         $dv .= "<h2>$vehicle[invMake] $vehicle[invModel]</h2>";
         $dv .= "<span>$" . number_format($vehicle['invPrice']) . "</span>";
@@ -72,7 +72,6 @@ function buildVehiclesDisplay($vehicles)
 //     $dv .= "<h2>{$vehicleInfo['invMake']} {$vehicleInfo['invModel']} Details</h2>";
 //     $dv .= "<p>{$vehicleInfo['invDescription']}</p>";
 //     $dv .= "<p>Color: {$vehicleInfo['invColor']}</p>";
-//     $dv .= "<p># in Stock: {$vehicleInfo['invStock']}</p>";
 //     $dv .= '</div>';
 //     $dv .= '</section>';
 //     return $dv;
@@ -241,39 +240,74 @@ function resizeImage($old_image_path, $new_image_path, $max_width, $max_height)
     imagedestroy($old_image);
 } // ends resizeImage function
 
-// Generate HTML for thumbnail images
-// function generateThumbnailHTML($thumbnailImages)
-// {
-//     $html = '';
-//     foreach ($thumbnailImages as $image) {
-//         $imgPath = $image['imgPath'];
-//         $altText = 'Thumbnail Image';
-//         $html .= '<img src="' . $imgPath . '" alt="' . $altText . '" class="thumbnail car-image">';
-//     }
-//     return $html;
-// }
-
 // Generate HTML for Vehicle detail view
-function displayVehicleInfo($vehicleInfo, $thumbnailImages)
+function displayVehicleInfo($vehicleInfo)
 {
     $invPrice = '$' . number_format($vehicleInfo['invPrice'], 2);
     $div = "<div class='vehicleDetails'>";
-    $div .= "<ul class='thumbnailImg'>";
-    foreach ($thumbnailImages as $thumbNail) {
-        $div .= "<li><img src='$thumbNail[imgPath]' alt='$vehicleInfo[invMake] $vehicleInfo[invModel] thumbnail'></li> ";
-    }
-    $div .= "</ul>";
     $div .= "<div class='imgDiv'>
                     <figure>
-                        <img src='$vehicleInfo[imgPath]' alt='Image of $vehicleInfo[invMake] $vehicleInfo[invModel] on PHPMotors.com'>
+                        <img class='veh-img' src='{$vehicleInfo['imgPath']}' alt='Image of {$vehicleInfo['invMake']} {$vehicleInfo['invModel']} on PHPMotors.com'>
                     </figure>
                 </div>
                 <div class='infoDiv'>
                     <p>Price: $invPrice</p>
-                    <p>$vehicleInfo[invDescription]</p>
-                    <p>Color: $vehicleInfo[invColor]</p>
-                    <p># in Stock: $vehicleInfo[invStock]</p>
+                    <p>{$vehicleInfo['invDescription']}</p>
+                    <p>Color: {$vehicleInfo['invColor']}</p>
                 </div>
             </div>";
     return $div;
+}
+
+/*************************
+ * Search Result Functions
+ ************************/
+
+// Build a search result based on paginated search criteria
+function pagination($totalPages, $page, $searchString)
+{
+    $next = $page + 1;
+    $prev = $page - 1;
+
+    $pagLink = "<ul class='paginationBar'>";
+    // Previous 
+    if ($page !== 1) {
+        $pagLink .= "<li><a class='page-link' href='/phpmotors/search?action=search&searchString=$searchString&page=" . $prev . "' title='Go to page " . $prev . " of results'>&lt;&lt;&lt;</a></li>";
+    }
+    // Build Links for page numbers
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $pagLink .= "<li class='page-num'><a class='page-num-link page-link";
+        if ($i === intval($page)) {
+            $pagLink .= " currentPage";
+        }
+        $pagLink .= "' href='/phpmotors/search?action=search&searchString=$searchString&page=" . $i . "' title='Go to page " . $i . " of results'>" . $i . "</a></li>";
+    }
+    // Next
+    if ($next <= $totalPages) {
+        $pagLink .= "<li><a class='page-link' href='/phpmotors/search?action=search&searchString=$searchString&page=" . $next . "' title='Go to page " . $next . " of results'> > > > </a></li>";
+    }
+    $pagLink .= "</ul>";
+    return $pagLink;
+}
+
+// THIS CREATES HTML BASED ON THE $searchResults RETURNED FROM THE SQL ABOVE. IT SHOULD BE THE LIST OF RESULTS THAT LOOKS SIMILAR TO THE RESULTS PAGE WE SEE WHEN WE GOOGLE SOMETHING.
+function buildSearchResults($resNum, $searchString, $searchResults, $paginationBar)
+{
+    // This is to help prevent XSS attack with searchString
+    $encodedSearchString = htmlspecialchars($searchString, ENT_QUOTES, 'UTF-8');
+
+    $searchDisplay = "<h2 id='search-number'>Returned " . $resNum . " results for: $encodedSearchString</h2>";
+    $searchDisplay .= "<ul id='search-result'>";
+    foreach ($searchResults as $result) {
+        $searchDisplay .= '<li>';
+        $searchDisplay .= "<p><a href='/phpmotors/vehicles/?action=vehicleInfo&vehicleId=" . urlencode($result['invId']) . "' title='View the $result[invYear] $result[invMake] $result[invModel]'>$result[invYear] $result[invMake] $result[invModel]</a></p>";
+        $searchDisplay .= '<p class="description" >' . $result['invDescription'] . '</p>';
+        $searchDisplay .= '</li>';
+        //   $searchDisplay .= '<hr>';
+    }
+    $searchDisplay .= "</ul>";
+    if ($paginationBar != NULL) {
+        $searchDisplay .= "<p id='paginationBar'>" . $paginationBar . "</p>";
+    }
+    return $searchDisplay;
 }

@@ -30,13 +30,13 @@ function newCarClassification($classificationName)
 
 // The newVehicle() function will handle inserting a new vehicle to the inventory table
 
-function newVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invStock, $invColor, $classificationId)
+function newVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invColor, $classificationId)
 {
     // Create a connection object using the phpmotors connection function
     $db = phpmotorsConnect();
     // The SQL statement
-    $sql = 'INSERT INTO inventory (invMake, invModel, invDescription, invImage, invThumbnail, invPrice, invStock, invColor, classificationId)
-    VALUES (:invMake, :invModel, :invDescription, :invImage, :invThumbnail, :invPrice, :invStock, :invColor, :classificationId)';
+    $sql = 'INSERT INTO inventory (invMake, invModel, invDescription, invImage, invThumbnail, invPrice, invColor, classificationId)
+    VALUES (:invMake, :invModel, :invDescription, :invImage, :invThumbnail, :invPrice, :invColor, :classificationId)';
     // Create the prepared statement using the phpmotors connection
     $stmt = $db->prepare($sql);
     // The next nine lines replace the placeholders in the SQL
@@ -48,7 +48,6 @@ function newVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbna
     $stmt->bindValue(':invImage', $invImage, PDO::PARAM_STR);
     $stmt->bindValue(':invThumbnail', $invThumbnail, PDO::PARAM_STR);
     $stmt->bindValue(':invPrice', $invPrice, PDO::PARAM_STR);
-    $stmt->bindValue(':invStock', $invStock, PDO::PARAM_INT);
     $stmt->bindValue(':invColor', $invColor, PDO::PARAM_STR);
     $stmt->bindValue(':classificationId', $classificationId, PDO::PARAM_INT);
     // Insert the data
@@ -81,7 +80,7 @@ function getInvItemInfo($invId)
     $db = phpmotorsConnect();
     $sql = 'SELECT * FROM inventory WHERE invId = :invId';
     $stmt = $db->prepare($sql);
-    $stmt->bindValue(':invId', $invId, PDO::PARAM_INT);
+    $stmt->bindValue(':invId', $invId, PDO::PARAM_STR);
     $stmt->execute();
     $invInfo = $stmt->fetch(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
@@ -89,12 +88,12 @@ function getInvItemInfo($invId)
 }
 
 // Updates vehicles information
-function updateVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invStock, $invColor, $classificationId, $invId)
+function updateVehicle($invMake, $invModel, $invDescription, $invImage, $invThumbnail, $invPrice, $invColor, $classificationId, $invId)
 {
     // Create a connection object using the phpmotors connection function
     $db = phpmotorsConnect();
     // The SQL statement
-    $sql = 'UPDATE inventory SET invMake = :invMake, invModel = :invModel, invDescription = :invDescription, invImage = :invImage, invThumbnail = :invThumbnail, invPrice = :invPrice, invStock = :invStock, invColor = :invColor, classificationId = :classificationId WHERE invId = :invId';
+    $sql = 'UPDATE inventory SET invMake = :invMake, invModel = :invModel, invDescription = :invDescription, invImage = :invImage, invThumbnail = :invThumbnail, invPrice = :invPrice, invColor = :invColor, classificationId = :classificationId WHERE invId = :invId';
     // Create the prepared statement using the phpmotors connection
     $stmt = $db->prepare($sql);
     // The next nine lines replace the placeholders in the SQL
@@ -106,10 +105,9 @@ function updateVehicle($invMake, $invModel, $invDescription, $invImage, $invThum
     $stmt->bindValue(':invImage', $invImage, PDO::PARAM_STR);
     $stmt->bindValue(':invThumbnail', $invThumbnail, PDO::PARAM_STR);
     $stmt->bindValue(':invPrice', $invPrice, PDO::PARAM_STR);
-    $stmt->bindValue(':invStock', $invStock, PDO::PARAM_INT);
     $stmt->bindValue(':invColor', $invColor, PDO::PARAM_STR);
     $stmt->bindValue(':classificationId', $classificationId, PDO::PARAM_INT);
-    $stmt->bindValue(':invId', $invId, PDO::PARAM_INT);
+    $stmt->bindValue(':invId', $invId, PDO::PARAM_STR);
     // Insert the data
     $stmt->execute();
     // Ask how many rows changed as a result of our insert
@@ -130,7 +128,7 @@ function deleteVehicle($invId)
     // Create the prepared statement using the phpmotors connection
     $stmt = $db->prepare($sql);
     // The next line perform a deletion of the vehicle based on its vehicles ID
-    $stmt->bindValue(':invId', $invId, PDO::PARAM_INT);
+    $stmt->bindValue(':invId', $invId, PDO::PARAM_STR);
     // Insert the data
     $stmt->execute();
     // Ask how many rows changed as a result of our insert
@@ -146,8 +144,7 @@ function getVehiclesByClassification($classificationName)
 {
     $db = phpmotorsConnect();
     $sql = "SELECT * FROM images INNER JOIN inventory ON inventory.invId = images.invId INNER JOIN carclassification ON carclassification.classificationId
-    = inventory.classificationId WHERE carclassification.classificationName = :classificationName AND images.imgPath LIKE '%-tn%' 
-    AND images.imgPrimary = 1";
+    = inventory.classificationId WHERE carclassification.classificationName = :classificationName AND images.imgPath LIKE '%-tn%'";
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':classificationName', $classificationName, PDO::PARAM_STR);
     $stmt->execute();
@@ -160,19 +157,20 @@ function getVehiclesByClassification($classificationName)
 function getVehicleInfo($invId)
 {
     $db = phpmotorsConnect();
-    // $sql = 'SELECT * FROM inventory WHERE invId = :invId';
     $sql = 'SELECT i.*, 
-            (SELECT imgPath FROM images WHERE invId = :invId AND imgPrimary = 1 LIMIT 1)
+            (SELECT imgPath FROM images WHERE invId = i.invId LIMIT 1)
             AS imgPath 
             FROM inventory i 
             WHERE i.invId = :invId';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':invId', $invId, PDO::PARAM_INT);
+    $stmt->bindParam(':invId', $invId, PDO::PARAM_STR);
     $stmt->execute();
     $vehicleInfo = $stmt->fetch(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
+    // var_dump($vehicleInfo);
     return $vehicleInfo;
 }
+
 
 // This function will obtain information about all vehicles in inventory table.
 function getVehicles()
